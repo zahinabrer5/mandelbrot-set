@@ -6,10 +6,8 @@ import javax.imageio.ImageIO;
 public class Main {
     public static void main(String[] args) {
         double spacing = 0.0005; // 1 px is this value squared
-        double startRe = -2.15;
-        double startIm = 1.15;
-        double endRe = 0.75;
-        double endIm = -1.15;
+        double startRe = -2.15, startIm = 1.15;
+        double endRe = 0.75, endIm = -1.15;
         int w = (int)((endRe-startRe)/spacing);
         int h = (int)((startIm-endIm)/spacing);
         Color[] colors = {
@@ -27,6 +25,8 @@ public class Main {
         };
         int iterFactor = 15;
         int maxIter = (colors.length-1)*iterFactor;
+        String imgName = "out";
+        String imgFormat = "png";
         BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         // set pixels for Mandelbrot set
         for (double cIm = startIm; cIm >= endIm; cIm -= spacing) {
@@ -34,23 +34,21 @@ public class Main {
                 double zRe = 0, zIm = 0;
                 int iter = 0;
                 for (; iter < maxIter; iter++) {
-                    double re = zRe*zRe - zIm*zIm + cRe;
-                    double im = 2*zRe*zIm + cIm;
-                    zRe = re;
-                    zIm = im;
+                    double zReSave = zRe;
+                    zRe = zRe*zRe - zIm*zIm + cRe;
+                    zIm = 2*zReSave*zIm + cIm;
                     if (Math.hypot(zRe, zIm) > 2) {
                         break;
                     }
                 }
-                int x = (int)((cRe-startRe)/spacing);
-                int y = (int)((startIm-cIm)/spacing);
-                int rgb = colors[iter/iterFactor].getRGB();
-                img.setRGB(x, y, rgb);
+                img.setRGB((int)((cRe-startRe)/spacing), // x
+                    (int)((startIm-cIm)/spacing),        // y
+                    colors[iter/iterFactor].getRGB());   // rgb
             }
         }
         // write image
         try {
-            ImageIO.write(img, "png", new File("out.png"));
+            ImageIO.write(img, imgFormat, new File(imgName+"."+imgFormat));
         } catch (IOException e) {
             System.err.println("Caught IOException: " + e.getMessage());
         }
