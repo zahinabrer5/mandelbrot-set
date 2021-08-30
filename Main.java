@@ -5,13 +5,13 @@ import java.awt.Color;
 import javax.imageio.ImageIO;
 public class Main {
     public static void main(String[] args) {
-        final double spacing = 0.0005;                // 1px = this value squared
-        final double startRe = -2.15, startIm = 1.15; // first complex number in grid
-        final double endRe = 0.75, endIm = -1.15;     // last complex number in grid
+        final double spacing = 0.001;                 // 1px = this value squared
+        final double startRe = -2.75, startIm = 1.15; // first complex number in grid
+        final double endRe = 1.35, endIm = -1.15;     // last complex number in grid
         final int iterFactor = 15;                    // used to determine # of iterations
         final String outfile = "out.png";
         final Color[] colors = {
-            Color.BLUE,
+            new Color(0, 0, 128),
             Color.WHITE,
             Color.RED,
             Color.ORANGE,
@@ -41,9 +41,10 @@ public class Main {
                         break;
                     }
                 }
-                img.setRGB((int)((cRe-startRe)/spacing), // x
-                    (int)((startIm-cIm)/spacing),        // y
-                    colors[iter/iterFactor].getRGB());   // rgb
+                img.setRGB(
+                    (int)((cRe-startRe)/spacing),      // x
+                    (int)((startIm-cIm)/spacing),      // y
+                    colors[iter/iterFactor].getRGB()); // rgb
             }
         }
         // write image
